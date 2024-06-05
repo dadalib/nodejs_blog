@@ -19,6 +19,9 @@ app.get('',(req,res) => {
     res.send("Hello World");
 });
 
+// Using routes foldder to set main page
+app.use('/',require('./server/routes/main'));
+
 app.listen(PORT,()=>{
     console.log('App Listening on port ${PORT}');
 });
