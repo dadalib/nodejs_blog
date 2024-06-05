@@ -10,10 +10,11 @@ const PORT = 5000 || process.env.PORT;
 // Public folder containing CSS, Js ...
 app.use(express.static('public'));
 
-// Template Engine
+// Template Engine fou ejs express layout
 app.use(expressLayout);
+// Main layout
 app.set('layout','./layouts/main');
-// Set the view engine
+// Set the view engine set to ejs
 app.set('view engine','ejs');
 
 
