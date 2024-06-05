@@ -13,12 +13,9 @@ app.use(express.static('public'));
 // Template Engine
 app.use(expressLayout);
 app.set('layout','./layouts/main');
-app.set('view.engine','ejs');
+// Set the view engine
+app.set('view engine','ejs');
 
-// Calling request and inserting response
-app.get('',(req,res) => {
-    res.send("Hello World");
-});
 
 // Using routes foldder to set main page
 app.use('/',require('./server/routes/main'));
