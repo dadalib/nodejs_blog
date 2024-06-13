@@ -3,9 +3,14 @@ require('dotenv').config();
 const express =  require('express');
 const expressLayout = require('express-ejs-layouts');
 
+
+// // Config DB
+const connectDB = require('./server/config/db');
 const app = express();
-// Choose port by deault if ina cloud server
 const PORT = 5000 || process.env.PORT;
+
+// //Connect DB
+connectDB();
 
 // Public folder containing CSS, Js ...
 app.use(express.static('public'));
