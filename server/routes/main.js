@@ -9,21 +9,49 @@ const Post = require('../models/Post');
 */
 // Routes
 // Pass data
-router.get('', async(req, res) => {
-    const locals = {
-        title: "NodeJs Blog",
-        description: "Simple Blog created with NodeJs, Express & MongoDb."
-    }
+router.get('', async (req, res) => {
+    try {
+        const locals = {
+            title: "NodeJs Blog",
+            description: "Simple Blog created with NodeJs, Express & MongoDb."
+        }
 
-    try{
-        const data = await Post.find();
-        res.render('index',{locals,data});
-    }catch(error){
+        let perPage = 10;
+        let page = req.query.page || 1;
+
+        const data = await Post.aggregate([{ $sort : { createdAt: -1}}])
+        .skip(perPage*page-parPage)
+        .limit(perPage)
+        .exec();
+
+        const count =await Post.count();
+        const nextPage = parseInt(page) +1;
+        const hasNexPage = nextPage <= Math.ceil(count /perPage);
+
+        // const data = await Post.find();
+        res.render('index', { locals, data });
+    } catch (error) {
         console.log(error);
     }
 
     // res.render('index', { locals });
 });
+
+// router.get('', async(req, res) => {
+//     const locals = {
+//         title: "NodeJs Blog",
+//         description: "Simple Blog created with NodeJs, Express & MongoDb."
+//     }
+
+//     try{
+//         const data = await Post.find();
+//         res.render('index',{locals,data});
+//     }catch(error){
+//         console.log(error);
+//     }
+
+//     // res.render('index', { locals });
+// });
 
 // Insert example Mongo data
 
