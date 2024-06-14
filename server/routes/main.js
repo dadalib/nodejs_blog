@@ -16,20 +16,34 @@ router.get('', async (req, res) => {
             description: "Simple Blog created with NodeJs, Express & MongoDb."
         }
 
-        let perPage = 10;
+        let perPage = 5;
         let page = req.query.page || 1;
 
+        // Post Page to the oldest in the top
         const data = await Post.aggregate([{ $sort : { createdAt: -1}}])
-        .skip(perPage*page-parPage)
+        .skip(perPage*page-perPage)
         .limit(perPage)
         .exec();
 
-        const count =await Post.count();
+        // Blog post count
+        const count =await Post.countDocuments();
         const nextPage = parseInt(page) +1;
         const hasNexPage = nextPage <= Math.ceil(count /perPage);
 
+        // Render Data
+        res.render('index', {
+            locals,
+            data,
+            current: page,
+            nextPage: hasNexPage ? nextPage : null 
+         });
+
+        // Pass Page
+
+
+
         // const data = await Post.find();
-        res.render('index', { locals, data });
+        // res.render('index', { locals, data });
     } catch (error) {
         console.log(error);
     }
