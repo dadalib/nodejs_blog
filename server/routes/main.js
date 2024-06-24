@@ -94,6 +94,32 @@ router.get('/post/:id', async(req, res) => {
 });
 
 /**
+ * POST /
+ * Post searchTerm
+*/
+router.post('/search', async(req, res) => {
+    try{
+        const locals = {
+            title: "Search",
+            description: "Simple Blog created with NodeJs, Express & MongoDb."
+        }
+
+
+        let searchTerm = req.body.searchTerm;
+        console.log(searchTerm)
+
+    
+        // const data = await Post.find();
+        res.send('searchTearm');
+    }catch(error){
+        console.log(error);
+    }
+
+    // res.render('index', { locals });
+});
+
+
+/**
  * GET /
  * About
 */
