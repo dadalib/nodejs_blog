@@ -12,6 +12,10 @@ const PORT = 5000 || process.env.PORT;
 // //Connect DB
 connectDB();
 
+// Pass Search data
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+
 // Public folder containing CSS, Js ...
 app.use(express.static('public'));
 
