@@ -29,6 +29,7 @@ app.set('view engine','ejs');
 
 // Using routes foldder to set main page
 app.use('/',require('./server/routes/main'));
+app.use('/',require('./server/routes/admin'));
 
 app.listen(PORT,()=>{
     console.log('App Listening on port ${PORT}');
