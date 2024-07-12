@@ -9,6 +9,8 @@ const jwt = require('jsonwebtoken');
 
 
 const adminLayout = '../views/layouts/admin';
+const jwtSecret = process.env.JWT_SECRET;
+
 
 /**
  * GET /
@@ -40,20 +42,42 @@ router.post('/admin', async(req, res) => {
     try{
 
         const { username,password } = req.body;
-        if(req.body.username === 'admin' && req.body.password == 'password'){
-            res.send('You are logged in')
-        }else{
-            res.send('Wrong username or password')
-        }
-        console.log(req.body);
+        // Using cookiens for still login
+        // Find user
+        const user = await User.findOne({ username });
 
-        res.redirect('/admin');
+        // Error if user not find
+        if(!user){
+            return res.status(401).json({ messagae : 'Invalid credentials'});            
+        }
+
+        const isPasswordValid = await bcrypt.compare(password,user.password);
+
+        // Passwor not valid
+        const token = jwt.sign({userId: user._id}, jwtSecret)
+        res.cookie('token',token,{ httpOnly:true});
+
+        res.redirect('/dashboard');
+
     }catch(error){
         console.log(error);
     }
 
     // res.render('index', { locals });
 });
+
+
+/**
+ * GET /
+ * Dashboard
+*/
+
+router.get('/dashboard', async(req, res) => {
+    res.render('admin/dashboard');
+
+
+});
+    
 
 
 /**
@@ -87,3 +111,13 @@ router.post('/register', async(req, res) => {
 });
 
 module.exports = router;
+
+
+        // if(req.body.username === 'admin' && req.body.password == 'password'){
+        //     res.send('You are logged in')
+        // }else{
+        //     res.send('Wrong username or password')
+        // }
+        // console.log(req.body);
+
+        // res.redirect('/admin');
