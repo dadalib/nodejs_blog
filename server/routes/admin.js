@@ -86,46 +86,31 @@ router.post('/admin', async(req, res) => {
 
 /**
  * GET /
- * Dashboard
+ * Admin Dashboard
 */
 
 router.get('/dashboard', authMiddleware,async(req, res) => {
-    res.render('admin/dashboard');
+    try{
+        const locals = {
+            title:'Dashboard',
+            description:'Simple Blog created with NodeJs, Express & MongoDB.'
+        }
+
+        const data = await Post.find();
+        res.render('admin/dashboard',{
+            locals,
+            data
+        });
+        
+    }catch(error){
+
+    }
 
 
 });
     
 
 
-/**
- * GET /
- * Admin - Register
-*/
-
-router.post('/register', async(req, res) => {
-    try{
-
-        const { username,password } = req.body;
-        const hashedPassword = await bcrypt.hash(password,10);
-
-        try{
-            //Pass the hash password
-            const user = await User.create({username,password:hashedPassword});
-            res.status(201).json({message : 'User Created',user});
-        // Error Handeling    
-        } catch ( error) {
-            if(error.code === 11000){
-                res.status(409).json({message :'Uer already in use'});
-            }
-            res.status(500).json({message: 'Internal Server error'})
-        }
-        
-    }catch(error){
-        console.log(error);
-    }
-
-    // res.render('index', { locals });
-});
 
 module.exports = router;
 
