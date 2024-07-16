@@ -71,7 +71,7 @@ router.post('/admin', async(req, res) => {
         const isPasswordValid = await bcrypt.compare(password,user.password);
 
         // Passwor not valid
-        const token = jwt.sign({userId: user._id}, jwtSecret)
+        const token = jwt.sign({ userId: user._id}, jwtSecret)
         res.cookie('token',token,{ httpOnly:true});
 
         res.redirect('/dashboard');
@@ -164,6 +164,56 @@ router.post('/add-post', authMiddleware,async(req, res) => {
         console.log(error);
     }
 });
+
+/**
+ * GET
+ * Admin - Create New Post
+*/
+
+router.get('/edit-post/:id', authMiddleware, async(req, res) => {
+    try{
+        const locals = {
+            title:'Edit Post',
+            description:'Simple Blog created with NodeJs, Express & MongoDB.'
+        };
+
+        const data = await Post.findOne({ _id: req.params.id });
+        
+        res.render('admin/edit-post',{
+            locals,
+            data,
+            layout: adminLayout
+        })
+
+    }catch(error){
+        console.log(error);
+    }
+});
+
+
+
+/**
+ * PUT
+ * Admin - Create New Post
+*/
+
+router.put('/edit-post/:id', authMiddleware,async(req, res) => {
+    try{
+
+        await Post.findByIdAndUpdate(req.params.id, {
+            title : req.body.title,
+            body : req.body.body,
+            updateAt : Date.now()
+
+        });
+        
+        res.redirect('/edit-post/${req.params.id}');
+
+    }catch(error){
+        console.log(error);
+    }
+});
+
 
 
 
