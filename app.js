@@ -11,8 +11,13 @@ const MongoStore = require('connect-mongo');
 
 // // Config DB
 const connectDB = require('./server/config/db');
-const { mongo } = require('mongoose');
+const { isActiveRoute } = require('./server/helpers/routeHelpers');
+// const { mongo } = require('mongoose');
 const session = require('express-session');
+// Middleware
+
+
+
 const app = express();
 const PORT = 5000 || process.env.PORT;
 
@@ -20,7 +25,7 @@ const PORT = 5000 || process.env.PORT;
 connectDB();
 
 // Pass Search data
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended:true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(methodOverride('_method'));
@@ -29,7 +34,7 @@ app.use(methodOverride('_method'));
 app.use(session({
     secret : 'keyboard cat',
     resave : false,
-    saveUnitialized:true,
+    saveUnitialized: true,
     store: MongoStore.create({
         mongoUrl: process.env.MONGODB_URI
     })
@@ -49,6 +54,8 @@ app.use(expressLayout);
 app.set('layout','./layouts/main');
 // Set the view engine set to ejs
 app.set('view engine','ejs');
+
+app.locals.isActiveRoute = isActiveRoute; 
 
 
 // Using routes foldder to set main page
